@@ -15,6 +15,10 @@ const elments = {
   btnInformation: document.querySelector('.info-modal'),
   btnCloseModal: document.querySelector('.btn-close-modal'),
   overLay: document.querySelector('.info-overlay'),
+  players: document.querySelector('.player'),
+  btnHoldAndRolling: document.querySelector('.btns-row'),
+  btnResetGame: document.querySelector('.btn--new'),
+  currentScore: document.querySelector('.current-score'),
 };
 // initializing scores
 let randomNumber = Math.trunc(Math.random() * 6) + 1;
@@ -23,6 +27,7 @@ let currentScore1 = 0;
 let totalScore0 = 0;
 let totalScore1 = 0;
 let gameOver = false;
+
 //  images for dice
 const imgaeDice = [
   'images/dice-1.png',
@@ -32,39 +37,14 @@ const imgaeDice = [
   'images/dice-5.png',
   'images/dice-6.png',
 ];
+//  for audio
 const clickSound = new Audio('./soundEffects/click.mp3');
 const winkSound = new Audio('./soundEffects/win.mp3');
 
-elments.score0.textContent = totalScore0;
-elments.score1.textContent = totalScore1;
-elments.dice.classList.add('hidden');
-// function for winning
-const winner = function () {
-  if (totalScore0 >= 100) {
-    elments.player0.classList.add('player--winner');
-    elments.player0.classList.remove('player--active');
-    elments.namePlayer0.textContent = 'Winner Player  1';
-    winkSound.play();
-    gameOver = true;
-  } else if (totalScore1 >= 100) {
-    elments.player1.classList.add('player--winner');
-    elments.player1.classList.remove('player--active');
-    elments.namePlayer1.textContent = 'Winner Player 2';
-    winkSound.play();
-    gameOver = true;
-  }
-};
-const closingFunction = function () {
-  elments.btnInformation.classList.add('hidden');
-  elments.overLay.classList.add('hidden');
-};
-const activePlayers = function () {
-  elments.player0.classList.add('player--active');
-  elments.player1.classList.remove('player--active');
-};
-const unActivePlayers = function () {
-  elments.player0.classList.remove('player--active');
-  elments.player1.classList.add('player--active');
+// function for hidding
+const hiddenDiceAndBtn = function () {
+  elments.dice.classList.add('hidden');
+  elments.btnHoldAndRolling.classList.add('hidden');
 };
 //  for current score zero
 const currentScoreTo0 = function () {
@@ -76,54 +56,93 @@ const currentScoreTo1 = function () {
   currentScore1 = 0;
   elments.current1.textContent = currentScore1;
 };
+// function for winning
+const winner = function () {
+  if (totalScore0 >= 100) {
+    winkSound.play();
+    elments.player0.classList.add('player--winner');
+    elments.player0.classList.remove('player--active');
+    elments.namePlayer0.textContent = 'Winner Player  1';
+    currentScoreTo0();
+    hiddenDiceAndBtn();
+    elments.btnResetGame.style.top = '27rem';
+    return (gameOver = true);
+  } else if (totalScore1 >= 100) {
+    winkSound.play();
+    currentScoreTo1();
+    elments.player1.classList.add('player--winner');
+    elments.player1.classList.remove('player--active');
+    elments.namePlayer1.textContent = 'Winner Player 2';
+    hiddenDiceAndBtn();
+    elments.btnResetGame.style.top = '27rem';
+    return (gameOver = true);
+  }
+};
+//  function for close model info
+const closingFunction = function () {
+  elments.btnInformation.classList.add('hidden');
+  elments.overLay.classList.add('hidden');
+};
+
+//  function for switching active 0 to 1 player
+const activePlayers = function () {
+  elments.player0.classList.add('player--active');
+  elments.player1.classList.remove('player--active');
+};
+//  function for switching active 1 to 0 player
+const unActivePlayers = function () {
+  elments.player0.classList.remove('player--active');
+  elments.player1.classList.add('player--active');
+};
+
 //  function to click rollingDice game
 //  btn rolling
 const rollingDice = function () {
-  if (gameOver) {
-    return (gameOver = true);
-  }
-  clickSound.play();
-  elments.dice.classList.remove('hidden');
-  randomNumber = Math.trunc(Math.random() * 6) + 1;
-  elments.dice.src = imgaeDice[randomNumber - 1];
-  if (randomNumber !== 1) {
-    if (elments.player0.classList.contains('player--active')) {
-      currentScore0 += randomNumber;
-      elments.current0.textContent = currentScore0;
-    } else if (elments.player1.classList.contains('player--active')) {
-      currentScore1 += randomNumber;
-      elments.current1.textContent = currentScore1;
-    }
-  } else if (randomNumber === 1) {
-    if (elments.player0.classList.contains('player--active')) {
-      currentScoreTo0();
-      unActivePlayers();
-    } else if (elments.player1.classList.contains('player--active')) {
-      activePlayers();
-      currentScoreTo1();
+  winner();
+  if (!gameOver) {
+    clickSound.play();
+    elments.dice.classList.remove('hidden');
+    randomNumber = Math.trunc(Math.random() * 6) + 1;
+    elments.dice.src = imgaeDice[randomNumber - 1];
+    if (randomNumber !== 1) {
+      if (elments.player0.classList.contains('player--active')) {
+        currentScore0 += randomNumber;
+        elments.current0.textContent = currentScore0;
+      } else if (elments.player1.classList.contains('player--active')) {
+        currentScore1 += randomNumber;
+        elments.current1.textContent = currentScore1;
+      }
+    } else if (randomNumber === 1) {
+      if (elments.player0.classList.contains('player--active')) {
+        currentScoreTo0();
+        unActivePlayers();
+      } else if (elments.player1.classList.contains('player--active')) {
+        activePlayers();
+        currentScoreTo1();
+      }
     }
   }
 };
 // function for holding the score
 //  btn hold
 const btnHold = function () {
-  if (gameOver) {
-    return (gameOver = true);
-  }
-  clickSound.play();
-  if (totalScore0 >= 100 || totalScore1 >= 100) {
-    winner();
-    gameOver = true;
-  } else if (elments.player0.classList.contains('player--active')) {
-    totalScore0 += currentScore0;
-    elments.score0.textContent = totalScore0;
-    currentScoreTo0();
-    unActivePlayers();
-  } else if (elments.player1.classList.contains('player--active')) {
-    totalScore1 += currentScore1;
-    elments.score1.textContent = totalScore1;
-    currentScoreTo1();
-    activePlayers();
+  if (!gameOver) {
+    clickSound.play();
+    if (totalScore0 >= 20 || totalScore1 >= 20) {
+      winner();
+      gameOver = true;
+      // elments.dice.classList.add('hidden');
+    } else if (elments.player0.classList.contains('player--active')) {
+      totalScore0 += currentScore0;
+      elments.score0.textContent = totalScore0;
+      currentScoreTo0();
+      unActivePlayers();
+    } else if (elments.player1.classList.contains('player--active')) {
+      totalScore1 += currentScore1;
+      elments.score1.textContent = totalScore1;
+      currentScoreTo1();
+      activePlayers();
+    }
   }
 };
 //  fuction for reseting the game
@@ -143,6 +162,8 @@ const btnNewGame = function () {
   activePlayers();
   elments.namePlayer0.textContent = 'Player 1';
   elments.namePlayer1.textContent = 'Player 2';
+  elments.btnHoldAndRolling.classList.remove('hidden');
+  elments.btnResetGame.style.top = '4rem';
 };
 //  shoing information model
 const btnInfo = function () {
