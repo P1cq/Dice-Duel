@@ -128,7 +128,7 @@ const rollingDice = function () {
 const btnHold = function () {
   if (!gameOver) {
     clickSound.play();
-    if (totalScore0 >= 20 || totalScore1 >= 20) {
+    if (totalScore0 >= 100 || totalScore1 >= 100) {
       winner();
       gameOver = true;
       // elments.dice.classList.add('hidden');
