@@ -94,7 +94,7 @@ const unActivePlayers = function () {
   elments.player0.classList.remove('player--active');
   elments.player1.classList.add('player--active');
 };
-
+elments.dice.classList.add('hidden');
 //  function to click rollingDice game
 //  btn rolling
 const rollingDice = function () {
