@@ -1,9 +1,10 @@
 A simple and fun dice game for two players. The first to reach 100 points wins. Luck and strategy go hand-in-hand — will you risk rolling again or play it safe?
 
-🔗 git : https://github.com/P1cq/Dice-Duel.git
-🎮 Play the Game: Click here to play
 
-💻 GitHub Repository: View on GitHub
+
+🎮 Play the Game: [Click here to play](https://p1cq.github.io/Dice-Duel/)
+
+💻 GitHub Repository: [View on GitHub](https://github.com/P1cq/Dice-Duel.git)
 
 (Replace # with the actual links once available)
 
@@ -53,3 +54,4 @@ JavaScript (DOM Manipulation, Events, Logic)
 - 🎯 JavaScript logic and implementation done by **Mohamed Ayman** as a practice project.
 - 🎓 This project is based on the **Pig Game** assignment from the Udemy course [The Complete JavaScript Course](https://www.udemy.com/course/the-complete-javascript-course/) by **Jonas Schmedtmann**.
 - 🎨 HTML & CSS are based on starter files provided in the course, with some custom modifications.
+
