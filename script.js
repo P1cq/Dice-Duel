@@ -22,21 +22,25 @@ const elments = {
 };
 // initializing scores
 let randomNumber = Math.trunc(Math.random() * 6) + 1;
-let currentScore0 = 0;
-let currentScore1 = 0;
-let totalScore0 = 0;
-let totalScore1 = 0;
-let gameOver = false;
+let currentScore0, currentScore1, totalScore0, totalScore1, gameOver;
 
-//  images for dice
-const imgaeDice = [
-  'images/dice-1.png',
-  'images/dice-2.png',
-  'images/dice-3.png',
-  'images/dice-4.png',
-  'images/dice-5.png',
-  'images/dice-6.png',
-];
+const resetingGame = function () {
+  gameOver = false;
+  totalScore0 = 0;
+  totalScore1 = 0;
+  elments.score0.textContent = totalScore0;
+  elments.score1.textContent = totalScore1;
+  elments.dice.classList.add('hidden');
+  elments.player0.classList.remove('player--winner');
+  elments.player1.classList.remove('player--winner');
+  elments.namePlayer0.textContent = 'Player 1';
+  elments.namePlayer1.textContent = 'Player 2';
+  elments.btnHoldAndRolling.classList.remove('hidden');
+  elments.btnResetGame.style.top = '4rem';
+};
+
+resetingGame();
+
 //  for audio
 const clickSound = new Audio('./soundEffects/click.mp3');
 const winkSound = new Audio('./soundEffects/win.mp3');
@@ -63,18 +67,18 @@ const winner = function () {
     elments.player0.classList.add('player--winner');
     elments.player0.classList.remove('player--active');
     elments.namePlayer0.textContent = 'Winner Player  1';
+    elments.btnResetGame.style.top = '27rem';
     currentScoreTo0();
     hiddenDiceAndBtn();
-    elments.btnResetGame.style.top = '27rem';
     return (gameOver = true);
   } else if (totalScore1 >= 100) {
     winkSound.play();
-    currentScoreTo1();
     elments.player1.classList.add('player--winner');
     elments.player1.classList.remove('player--active');
     elments.namePlayer1.textContent = 'Winner Player 2';
-    hiddenDiceAndBtn();
     elments.btnResetGame.style.top = '27rem';
+    currentScoreTo1();
+    hiddenDiceAndBtn();
     return (gameOver = true);
   }
 };
@@ -94,16 +98,15 @@ const unActivePlayers = function () {
   elments.player0.classList.remove('player--active');
   elments.player1.classList.add('player--active');
 };
-elments.dice.classList.add('hidden');
+
 //  function to click rollingDice game
-//  btn rolling
 const rollingDice = function () {
   winner();
   if (!gameOver) {
     clickSound.play();
     elments.dice.classList.remove('hidden');
     randomNumber = Math.trunc(Math.random() * 6) + 1;
-    elments.dice.src = imgaeDice[randomNumber - 1];
+    elments.dice.src = `images/dice-${randomNumber}.png`;
     if (randomNumber !== 1) {
       if (elments.player0.classList.contains('player--active')) {
         currentScore0 += randomNumber;
@@ -128,11 +131,8 @@ const rollingDice = function () {
 const btnHold = function () {
   if (!gameOver) {
     clickSound.play();
-    if (totalScore0 >= 100 || totalScore1 >= 100) {
-      winner();
-      gameOver = true;
-      // elments.dice.classList.add('hidden');
-    } else if (elments.player0.classList.contains('player--active')) {
+    winner();
+    if (elments.player0.classList.contains('player--active')) {
       totalScore0 += currentScore0;
       elments.score0.textContent = totalScore0;
       currentScoreTo0();
@@ -148,33 +148,22 @@ const btnHold = function () {
 //  fuction for reseting the game
 //  btn new game
 const btnNewGame = function () {
-  gameOver = false;
-  clickSound.play();
+  resetingGame();
   currentScoreTo0();
   currentScoreTo1();
-  totalScore0 = 0;
-  elments.score0.textContent = totalScore0;
-  totalScore1 = 0;
-  elments.score1.textContent = totalScore1;
-  elments.dice.classList.add('hidden');
-  elments.player0.classList.remove('player--winner');
-  elments.player1.classList.remove('player--winner');
+  clickSound.play();
   activePlayers();
-  elments.namePlayer0.textContent = 'Player 1';
-  elments.namePlayer1.textContent = 'Player 2';
-  elments.btnHoldAndRolling.classList.remove('hidden');
-  elments.btnResetGame.style.top = '4rem';
 };
 //  shoing information model
 const btnInfo = function () {
+  clickSound.play();
   elments.btnInformation.classList.remove('hidden');
   elments.overLay.classList.remove('hidden');
-  clickSound.play();
 };
 //  hidding information model
 const btnClose = function () {
-  closingFunction();
   clickSound.play();
+  closingFunction();
 };
 //  hidding information model with esc key
 const escClose = function (event) {
